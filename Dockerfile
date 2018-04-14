@@ -18,6 +18,8 @@ RUN conda install --yes 'keras=2.0*'
 RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # Elephas for distributed keras
 RUN pip install elephas
+# opencv
+RUN conda install -c conda-forge --yes opencv
 
 RUN mkdir ~/workspace
 
