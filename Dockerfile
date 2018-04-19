@@ -16,11 +16,14 @@ RUN apt-get update && \
     apt-get autoremove --yes && \
     apt-get install --yes emacs25 graphviz
 
+# install ispell and markdown
+RUN apt-get install --yes ispell markdown
+
 USER $NB_USER
 
 RUN pip install --upgrade pip
 
-RUN pip install spark-sklearn && pip install findspark
+RUN pip install -q py4j spark-sklearn findspark
 # Install Keras
 RUN conda install --yes 'tensorflow=1.3*' 'keras=2.0*'
 # Use the latest version of hyperopts (python 3.5 compatibility)
@@ -36,3 +39,6 @@ RUN mkdir ~/workspace
 RUN pip install chainer && \
     pip install --upgrade --no-deps statsmodels && \
     pip install git+https://github.com/s4w3d0ff/python-poloniex.git
+
+# install python checkers
+RUN pip install -q jedi importmagic autopep8
