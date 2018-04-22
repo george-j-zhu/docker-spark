@@ -25,7 +25,7 @@ RUN pip install --upgrade pip
 
 RUN pip install -q py4j spark-sklearn findspark
 # Install Keras
-RUN conda install --yes 'tensorflow=1.3*' 'keras=2.0*'
+RUN conda install --yes tensorflow-gpu keras
 # Use the latest version of hyperopts (python 3.5 compatibility)
 RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # Elephas for distributed keras
