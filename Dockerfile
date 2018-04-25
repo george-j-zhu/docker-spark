@@ -5,7 +5,7 @@ USER root
 ENV PYJ_LIB_VERSION py4j-0.10.1-src.zip
 
 RUN mkdir /opt/pythonlibs
-ENV PYTHONPATH /opt/pytonlibs:$SPARK_HOME/python/lib/$PYJ_LIB_VERSION:$PYTHONPATH
+ENV PYTHONPATH /opt/pythonlibs:$SPARK_HOME/python/lib/$PYJ_LIB_VERSION:$PYTHONPATH
 
 # install tig, emacs25
 RUN apt-get update && \
