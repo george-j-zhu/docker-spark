@@ -1,5 +1,5 @@
 docker container rm spark-notebook
-docker container run --name=pyspark-docker -it \
+docker container run --name=spark-notebook -it \
        -v /home/j-zhu/workspace:/home/jovyan/workspace:cached \
        -v /home/j-zhu/workspace/python:/opt/pythonlibs:cached \
        -p 8888:8888 \

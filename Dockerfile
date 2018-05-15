@@ -2,10 +2,9 @@ FROM jupyter/pyspark-notebook
 LABEL MAINTAINER "Jiajun Zhu <george.choo@outlook.com>"
 
 USER root
-ENV PYJ_LIB_VERSION py4j-0.10.1-src.zip
 
 RUN mkdir /opt/pythonlibs
-ENV PYTHONPATH /opt/pythonlibs:$SPARK_HOME/python/lib/$PYJ_LIB_VERSION:$PYTHONPATH
+ENV PYTHONPATH /opt/pythonlibs:$PYTHONPATH
 
 # install tig, emacs25
 RUN apt-get update && \
@@ -17,13 +16,13 @@ RUN apt-get update && \
     apt-get install --yes emacs25 graphviz
 
 # install ispell and markdown
-RUN apt-get install --yes ispell markdown
+RUN apt-get install --yes pylint ispell markdown
 
 USER $NB_USER
 
 RUN pip install --upgrade pip
 
-RUN pip install -q py4j spark-sklearn findspark
+RUN pip install -q py4j==0.10.6 spark-sklearn findspark
 # Install Keras
 RUN conda install --yes tensorflow-gpu keras
 # Use the latest version of hyperopts (python 3.5 compatibility)
