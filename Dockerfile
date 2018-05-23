@@ -16,7 +16,7 @@ RUN apt-get update && \
     apt-get install --yes emacs25 graphviz
 
 # install ispell and markdown
-RUN apt-get install --yes pylint ispell markdown
+RUN apt-get install --yes ispell markdown
 
 USER $NB_USER
 
@@ -37,7 +37,8 @@ RUN mkdir ~/workspace
 # install dependent packages for personal usage
 RUN pip install chainer && \
     pip install --upgrade --no-deps statsmodels && \
-    pip install git+https://github.com/s4w3d0ff/python-poloniex.git
+    pip install git+https://github.com/s4w3d0ff/python-poloniex.git && \
+    pip install -q tslearn
 
 # install python checkers
-RUN pip install -q jedi importmagic autopep8
+RUN pip install -q pylint jedi importmagic autopep8
