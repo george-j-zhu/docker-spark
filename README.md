@@ -42,5 +42,10 @@ As I use personal libraries in my daily work, I mount the my libraries onto a PY
 ```
 
 ## Connect to Spark Cluster
-Define spark master and workers in a docker-compose.yml.<br>
-Coming soon...
+Move to the dir where docker-compose.yml locates.
+Bring up a spark cluster by the following command
+```
+docker-compose up
+```
+
+Remember to modify docker-compose to fit your needs. In addition, if you'd like to use Jupyter Notebook, just 'docker exec' your master container and start a notebook server.
