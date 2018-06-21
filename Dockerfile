@@ -45,7 +45,7 @@ ENV PYTHONPATH $PYTHON_LIBS:$PYTHON_LIBS/mnt:$PYTHONPATH
 # Install Keras and opencv
 RUN conda install --yes tensorflow-gpu keras opencv
 
-# upgrade pip(don't use pip is one package can be install from conda)
+# upgrade pip
 # make sure the following pip installations will not overwrite conda packages
 RUN pip install --upgrade pip
 # libs for distributed keras
