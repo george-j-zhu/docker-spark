@@ -23,10 +23,18 @@ RUN apt-get install --yes ispell markdown
 # remove trash
 RUN apt-get autoremove --yes
 
-# install elasticsearch-hadoop adapter
+# TODO install elasticsearch-hadoop adapter
 RUN cd $SPARK_HOME/jars && \
     wget http://central.maven.org/maven2/org/elasticsearch/elasticsearch-hadoop/6.2.4/elasticsearch-hadoop-6.2.4.jar
 
+# install scala and SBT
+RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
+    dpkg -i scala-2.11.12.deb && \
+    apt-get install --yes apt-transport-https curl && \
+    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
+    apt-get update && \
+    apt-get install sbt
 
 USER $NB_USER
 
@@ -54,3 +62,7 @@ RUN git svn clone https://github.com/kingfengji/gcForest/trunk/lib/gcforest /opt
 
 # install python checkers
 RUN pip install -q pylint jedi importmagic autopep8
+
+# install jupyter scala plugin
+RUN cd /tmp && git clone https://github.com/jupyter-scala/jupyter-scala.git && \
+    cd jupyter-scala && ./jupyter-scala && cd .. && rm -dr jupyter-scala/
