@@ -15,7 +15,8 @@ RUN apt-get update && \
     add-apt-repository ppa:kelleyk/emacs && \
     apt-get update && \
     apt-get remove --yes emacs && \
-    apt-get install --yes emacs25 graphviz
+    apt-get install --yes emacs25 graphviz && \
+    apt-get install fonts-takao-pgothic
 
 # install ispell and markdown
 RUN apt-get install --yes ispell markdown
