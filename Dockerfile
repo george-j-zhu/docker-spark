@@ -45,11 +45,15 @@ ENV PYTHONPATH $PYTHON_LIBS:$PYTHON_LIBS/mnt:$PYTHONPATH
 # Install Keras and opencv
 RUN conda install --yes tensorflow-gpu keras opencv
 
+# install jupyter scala plugin
+RUN cd /tmp && git clone https://github.com/jupyter-scala/jupyter-scala.git && \
+    cd jupyter-scala && ./jupyter-scala && cd .. && rm -dr jupyter-scala/
+
 # upgrade pip
 # make sure the following pip installations will not overwrite conda packages
 RUN pip install --upgrade pip
 # libs for distributed keras
-RUN pip install -q elephas py4j==0.10.6 spark-sklearn findspark
+RUN pip install -q xgboost elephas py4j==0.10.6 spark-sklearn findspark
 # Use the latest version of hyperopts (python 3.5 compatibility)
 RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # install other packages for personal usage
@@ -62,7 +66,3 @@ RUN git svn clone https://github.com/kingfengji/gcForest/trunk/lib/gcforest /opt
 
 # install python checkers
 RUN pip install -q pylint jedi importmagic autopep8
-
-# install jupyter scala plugin
-RUN cd /tmp && git clone https://github.com/jupyter-scala/jupyter-scala.git && \
-    cd jupyter-scala && ./jupyter-scala && cd .. && rm -dr jupyter-scala/
