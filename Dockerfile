@@ -61,6 +61,8 @@ RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 RUN pip install git+https://github.com/s4w3d0ff/python-poloniex.git && \
     pip install -q tslearn && \
     pip install -q mlxtend
+# install nbextentions for jupyter
+RUN pip install jupyter_contrib_nbextensions && jupyter contrib nbextension install --user
 
 # install gcForest into pythonlibs dir
 RUN git svn clone https://github.com/kingfengji/gcForest/trunk/lib/gcforest /opt/pythonlibs/gcforest
