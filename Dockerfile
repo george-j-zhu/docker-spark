@@ -20,12 +20,13 @@ RUN apt-get update && \
 # install ispell and markdown
 RUN apt-get install --yes ispell markdown
 
-# remove trash
-RUN apt-get autoremove --yes
-
 # TODO install elasticsearch-hadoop adapter
 RUN cd $SPARK_HOME/jars && \
     wget http://central.maven.org/maven2/org/elasticsearch/elasticsearch-hadoop/6.2.4/elasticsearch-hadoop-6.2.4.jar
+
+# change settings of log4j for Spark
+RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties && \
+    sed "/log4j.rootCategory=/s%INFO%ERROR%" /usr/local/spark/conf/log4j.properties
 
 # install scala and SBT
 RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
@@ -34,7 +35,10 @@ RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
     echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
     apt-get update && \
-    apt-get install sbt
+    apt-get --yes install sbt maven
+
+# remove trash
+RUN apt-get autoremove --yes
 
 USER $NB_USER
 
