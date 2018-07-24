@@ -37,6 +37,10 @@ RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
     apt-get update && \
     apt-get install sbt
 
+# install nodejs and npm for angular
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
+    apt-get install -y nodejs && npm install -g @angular/cli
+
 USER $NB_USER
 
 RUN mkdir $PYTHON_LIBS/mnt && \
