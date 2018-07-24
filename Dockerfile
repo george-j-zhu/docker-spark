@@ -11,22 +11,22 @@ RUN mkdir /opt/pythonlibs && \
 
 # install git tools and emacs25
 RUN apt-get update && \
-    apt-get install --yes software-properties-common git-svn tig && \
+    apt-get install --yes apt-utils software-properties-common git-svn tig && \
     add-apt-repository ppa:kelleyk/emacs && \
     apt-get update && \
     apt-get remove --yes emacs && \
-    apt-get install --yes emacs25 graphviz && \
-    apt-get install fonts-takao-pgothic
+    apt-get install --yes emacs25 graphviz
 
 # install ispell and markdown
 RUN apt-get install --yes ispell markdown
 
-# remove trash
-RUN apt-get autoremove --yes
-
 # TODO install elasticsearch-hadoop adapter
 RUN cd $SPARK_HOME/jars && \
     wget http://central.maven.org/maven2/org/elasticsearch/elasticsearch-hadoop/6.2.4/elasticsearch-hadoop-6.2.4.jar
+
+# change settings of log4j for Spark
+RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties && \
+    sed "/log4j.rootCategory=/s%INFO%ERROR%" /usr/local/spark/conf/log4j.properties
 
 # install scala and SBT
 RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
@@ -35,7 +35,10 @@ RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
     echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
     apt-get update && \
-    apt-get install sbt
+    apt-get --yes install sbt maven
+
+# remove trash
+RUN apt-get autoremove --yes
 
 # install nodejs and npm for angular
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
@@ -48,7 +51,7 @@ RUN mkdir $PYTHON_LIBS/mnt && \
 ENV PYTHONPATH $PYTHON_LIBS:$PYTHON_LIBS/mnt:$PYTHONPATH
 
 # Install Keras and opencv
-RUN conda install --yes tensorflow-gpu keras opencv
+RUN conda update conda && conda install --yes tensorflow-gpu keras opencv
 
 # install jupyter scala plugin
 RUN cd /tmp && git clone https://github.com/jupyter-scala/jupyter-scala.git && \
@@ -58,7 +61,7 @@ RUN cd /tmp && git clone https://github.com/jupyter-scala/jupyter-scala.git && \
 # make sure the following pip installations will not overwrite conda packages
 RUN pip install --upgrade pip
 # libs for distributed keras
-RUN pip install -q xgboost elephas py4j==0.10.6 spark-sklearn findspark
+RUN pip install -q xgboost elephas py4j spark-sklearn findspark
 # Use the latest version of hyperopts (python 3.5 compatibility)
 RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # install other packages for personal usage
