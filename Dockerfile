@@ -11,11 +11,9 @@ RUN mkdir /opt/pythonlibs && \
 
 # install git tools and emacs25
 RUN apt-get update && \
-    apt-get install --yes apt-utils software-properties-common git-svn tig && \
-    add-apt-repository ppa:kelleyk/emacs && \
-    apt-get update && \
+    apt-get install --yes apt-utils software-properties-common git-svn tig htop && \
     apt-get remove --yes emacs && \
-    apt-get install --yes emacs25 graphviz
+    apt-get install --yes emacs25
 
 # install ispell and markdown
 RUN apt-get install --yes ispell markdown
