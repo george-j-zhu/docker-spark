@@ -13,7 +13,11 @@ RUN mkdir /opt/pythonlibs && \
 RUN apt-get update && \
     apt-get install --yes apt-utils software-properties-common git-svn tig htop && \
     apt-get remove --yes emacs && \
-    apt-get install --yes emacs25
+    apt-get install --yes emacs25 && \
+    apt-get install --yes openjdk-8-jdk
+
+# set $JAVA_HOME for JDK
+RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")' >> ~/.bashrc
 
 # install ispell and markdown
 RUN apt-get install --yes ispell markdown
