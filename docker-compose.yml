@@ -23,7 +23,8 @@ master:
     - 8080:8080
   volumes:
     - ~/workspace:/home/jovyan/workspace
-
+    - ~/datasource:/home/jovyan/datasource
+    - ~/.m2:/home/jovyan/.m2
 worker1:
   image: georgezhu/spark-notebook
   command: /usr/local/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
