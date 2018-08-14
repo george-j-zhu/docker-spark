@@ -25,6 +25,8 @@ master:
     - ~/workspace:/home/jovyan/workspace
     - ~/datasource:/home/jovyan/datasource
     - ~/.m2:/home/jovyan/.m2
+
+# unlike distributed datasources like HDFS, datasource folder which is just a file source neededs to be mounted on all nodes
 worker1:
   image: georgezhu/spark-notebook
   command: /usr/local/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://master:7077
@@ -50,3 +52,4 @@ worker1:
     - 8081:8081
   volumes:
     - ~/spark-work-dir:/usr/local/spark/work
+    - ~/datasource:/home/jovyan/datasource

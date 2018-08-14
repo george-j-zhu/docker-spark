@@ -19,6 +19,26 @@ RUN apt-get update && \
 # set $JAVA_HOME for JDK
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")' >> ~/.bashrc
 
+# install scala and SBT
+RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
+    dpkg -i scala-2.11.12.deb && \
+    apt-get install --yes apt-transport-https curl && \
+    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
+    apt-get update && \
+    apt-get --yes install sbt maven
+
+# mahout version
+ENV APACHE_MAHOUT_VERSION=0.13.0
+ENV APACHE_MAHOUT_PACKAGE_NAME=apache-mahout-distribution-${APACHE_MAHOUT_VERSION}
+# set mahout home
+RUN cd /usr/local && \
+    wget http://ftp.meisei-u.ac.jp/mirror/apache/dist/mahout/${APACHE_MAHOUT_VERSION}/${APACHE_MAHOUT_PACKAGE_NAME}.tar.gz && \
+    tar zxvf ${APACHE_MAHOUT_PACKAGE_NAME}.tar.gz && \
+    mv ${APACHE_MAHOUT_PACKAGE_NAME} mahout && \
+    rm ${APACHE_MAHOUT_PACKAGE_NAME}.tar.gz
+ENV MAHOUT_HOME /usr/local/mahout
+
 # install ispell and markdown
 RUN apt-get install --yes ispell markdown
 
@@ -29,15 +49,6 @@ RUN cd $SPARK_HOME/jars && \
 # change settings of log4j for Spark
 RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties && \
     sed "/log4j.rootCategory=/s%INFO%ERROR%" /usr/local/spark/conf/log4j.properties
-
-# install scala and SBT
-RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
-    dpkg -i scala-2.11.12.deb && \
-    apt-get install --yes apt-transport-https curl && \
-    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
-    apt-get update && \
-    apt-get --yes install sbt maven
 
 # install nodejs and npm for angular
 RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
