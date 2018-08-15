@@ -19,9 +19,11 @@ RUN apt-get update && \
 # set $JAVA_HOME for JDK
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")' >> ~/.bashrc
 
+ENV SCALA_VERSION=2.11.12
 # install scala and SBT
-RUN wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.deb && \
-    dpkg -i scala-2.11.12.deb && \
+RUN wget https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VERSION}.deb && \
+    dpkg -i scala-${SCALA_VERSION}.deb && \
+    rm scala-${SCALA_VERSION}.deb && \
     apt-get install --yes apt-transport-https curl && \
     echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
