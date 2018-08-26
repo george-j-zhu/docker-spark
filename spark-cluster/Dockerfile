@@ -1,4 +1,4 @@
-FROM jupyter/all-spark-notebook
+FROM jupyter/pyspark-notebook
 LABEL MAINTAINER "Jiajun Zhu <george.choo@outlook.com>"
 
 USER root
@@ -9,40 +9,29 @@ RUN mkdir /opt/pythonlibs && \
     chown $NB_USER:$NB_GID $PYTHON_LIBS && \
     fix-permissions $PYTHON_LIBS
 
-# install git tools and emacs25
+# uninstall nano, emacs
 RUN apt-get update && \
-    apt-get install --yes apt-utils software-properties-common git-svn tig htop && \
-    apt-get remove --yes emacs && \
-    apt-get install --yes emacs25 && \
-    apt-get install --yes openjdk-8-jdk
+    apt-get install --yes apt-utils && \
+    apt-get remove --yes nano emacs
 
-# set $JAVA_HOME for JDK
+# set $JAVA_HOME
 RUN echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/jre/bin/java::")' >> ~/.bashrc
 
 ENV SCALA_VERSION=2.11.12
-# install scala and SBT
+# install scala
 RUN wget https://downloads.lightbend.com/scala/${SCALA_VERSION}/scala-${SCALA_VERSION}.deb && \
     dpkg -i scala-${SCALA_VERSION}.deb && \
-    rm scala-${SCALA_VERSION}.deb && \
-    apt-get install --yes apt-transport-https curl && \
-    echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
-    apt-get update && \
-    apt-get --yes install sbt maven
+    rm scala-${SCALA_VERSION}.deb
 
-# mahout version
 ENV APACHE_MAHOUT_VERSION=0.13.0
 ENV APACHE_MAHOUT_PACKAGE_NAME=apache-mahout-distribution-${APACHE_MAHOUT_VERSION}
-# set mahout home
+# install apache mahout and set mahout home
 RUN cd /usr/local && \
     wget http://ftp.meisei-u.ac.jp/mirror/apache/dist/mahout/${APACHE_MAHOUT_VERSION}/${APACHE_MAHOUT_PACKAGE_NAME}.tar.gz && \
     tar zxvf ${APACHE_MAHOUT_PACKAGE_NAME}.tar.gz && \
     mv ${APACHE_MAHOUT_PACKAGE_NAME} mahout && \
     rm ${APACHE_MAHOUT_PACKAGE_NAME}.tar.gz
 ENV MAHOUT_HOME /usr/local/mahout
-
-# install ispell and markdown
-RUN apt-get install --yes ispell markdown
 
 # TODO install elasticsearch-hadoop adapter
 RUN cd $SPARK_HOME/jars && \
@@ -51,10 +40,6 @@ RUN cd $SPARK_HOME/jars && \
 # change settings of log4j for Spark
 RUN cp /usr/local/spark/conf/log4j.properties.template /usr/local/spark/conf/log4j.properties && \
     sed "/log4j.rootCategory=/s%INFO%ERROR%" /usr/local/spark/conf/log4j.properties
-
-# install nodejs and npm for angular
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
-    apt-get install -y nodejs && npm install -g @angular/cli
 
 # remove trash
 RUN apt-get autoremove --yes
@@ -73,20 +58,12 @@ RUN conda update conda && \
 # upgrade pip
 # make sure the following pip installations will not overwrite conda packages
 RUN pip install --upgrade pip
-# libs for distributed keras
 RUN pip install -q xgboost elephas spark-sklearn
 # Use the latest version of hyperopts(tuning hyper-parameters for DP) (python 3.5 compatibility)
 RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # install other packages for personal usage
 RUN pip install git+https://github.com/s4w3d0ff/python-poloniex.git && \
-    pip install -q tslearn && \
-    pip install -q mlxtend
-
-# install nbextentions for jupyter
-RUN pip install jupyter_contrib_nbextensions && jupyter contrib nbextension install --user
+    pip install -q tslearn mlxtend
 
 # install gcForest into pythonlibs dir
-RUN git svn clone https://github.com/kingfengji/gcForest/trunk/lib/gcforest /opt/pythonlibs/gcforest
-
-# install python checkers
-RUN pip install -q pylint jedi importmagic autopep8
+# RUN git svn clone https://github.com/kingfengji/gcForest/trunk/lib/gcforest /opt/pythonlibs/gcforest

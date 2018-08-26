@@ -1,17 +1,35 @@
 # Personal Dockerfile for Machine Learning and BigData processing
 
-This is my first attempt to move my jupyter notebook developement environment into Docker.<br>
 If you reached out here for exploring Jupyter Docker images, I recommend you to check the following repository.<br>
 [https://github.com/jupyter/docker-stacks](https://github.com/jupyter/docker-stacks)<br>
 
-## What it provides
-- pyspark(Spark for python)
-- conda python3
-- scikit-learn and spark-sklearn
-- keras
+2 Dockerfiles
+- spark-cluster
+- dev-env
+
+## spark-cluster
+This Dockerfile is currently based on jupyter/pyspark-notebook.<br>
+The following packages are installed here.
+- Scala 2.11
+- Apache Mahout 0.13.0
+- Keras
+- Tensorflow
+- Opencv
 - Elephas
-- spark
-- matplotlib, pandas, jupyter notebook
+- python API for retrieving data from Poloniex
+
+This Docker image is mainly used to bring up a Spark cluster.
+
+## dev-env
+This Dockerfile is based on spark-cluster.<br>
+The following packages are installed here.
+- Emacs
+- Angular
+- SBT
+- Maven
+- openjdk8-jdk
+
+This is my development environment.
 
 ## Building
 
@@ -20,7 +38,7 @@ docker image build -t [docker image name] .
 ```
 
 ## How to use
-After building the Dockerfile as a Docker image, run the following command to start a new docker container for Jupyter Notebook.<br>
+After building the Dockerfiles as Docker images, run the following command to start a new docker container.<br>
 
 ```
 docker container run --name=[docker container name] -it -v [host folder]:/home/jupyter/workspace -p [host port]:8888 [docker image name]
@@ -31,7 +49,7 @@ docker container run --name=[docker container name] -it -v [host folder]:/home/j
 * -v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mount a [host folder] as /home/jupyter/workspace in the container. workspace folder is the root directory of jupyter notebook.<br>
 * -p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bind container port 8888 to the [host port].<br>
 
-or you can use spark-notebook-start.sh to run a container instance.<br>
+or you can use dev-env/spark-notebook-start.sh to run a container instance.<br>
 Please note that spark-notebook-start.sh will start a jupyter notebook server without any authentification.
 
 ## PYTHONPATH
@@ -41,11 +59,10 @@ As I use personal libraries in my daily work, I mount the my libraries onto a PY
 -v [host PYTHONPATH folder]:/opt/pythonlibs
 ```
 
-## Connect to Spark Cluster
-Move to the dir where docker-compose.yml locates.
+## Bring up a Spark Cluster
+Copy spark-cluster/docker-compose.yml to anywhere you like.
 Bring up a spark cluster by the following command
+
 ```
 docker-compose up
 ```
-
-Remember to modify docker-compose to fit your needs. In addition, if you'd like to use Jupyter Notebook, just 'docker exec' your master container and start a notebook server.
