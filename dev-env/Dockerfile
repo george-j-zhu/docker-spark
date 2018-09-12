@@ -14,11 +14,12 @@ RUN apt-get update && \
     apt-get install --yes sbt maven openjdk-8-jdk && \
     apt-get install --yes ispell markdown
 
-# install nodejs and npm for angular
+# install nodejs, npm for angular, cheerio-heepcli for web scraping
 RUN curl -sL https://deb.nodesource.com/setup_10.x && \
     apt-get install -y nodejs && \
-    npm install -g @angular/cli
-
+    npm install -g @angular/cli && \
+    npm install cheerio-httpcli
+    
 # remove trash
 RUN apt-get --yes autoremove
 

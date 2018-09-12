@@ -64,6 +64,8 @@ RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # install other packages for personal usage
 RUN pip install git+https://github.com/s4w3d0ff/python-poloniex.git && \
     pip install -q tslearn mlxtend
+# install beautifulsoup4 for web scraping
+RUN pip install -q beautifulsoup4
 
 # install gcForest into pythonlibs dir
 # RUN git svn clone https://github.com/kingfengji/gcForest/trunk/lib/gcforest /opt/pythonlibs/gcforest
