@@ -63,7 +63,7 @@ RUN pip install -q xgboost elephas spark-sklearn
 RUN pip install https://github.com/hyperopt/hyperopt/archive/master.zip
 # install other packages for personal usage
 RUN pip install git+https://github.com/s4w3d0ff/python-poloniex.git && \
-    pip install -q tslearn mlxtend
+    pip install -q tslearn mlxtend ml_metrics
 # install beautifulsoup4 for web scraping
 RUN pip install -q beautifulsoup4
 
