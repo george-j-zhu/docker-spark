@@ -19,11 +19,15 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x && \
     apt-get install -y nodejs && \
     npm install -g @angular/cli && \
     npm install cheerio-httpcli
-    
+
 # remove trash
 RUN apt-get --yes autoremove
 
 USER $NB_USER
+
+# install flask
+RUN pip install Flask && \
+    easy_install PasteScript
 
 # install nbextentions for jupyter
 RUN pip install jupyter_contrib_nbextensions && jupyter contrib nbextension install --user
